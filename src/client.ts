@@ -50,11 +50,11 @@
 
 import express, { Request, Response, NextFunction} from 'express';
 import * as redis from 'redis';
-export const client = redis.createClient({
+export const client = redis.createClient({// create redis client
     url: 'redis://localhost:6379',
 });
 
-client.connect().catch(console.error);
+client.connect().catch(console.error);// connect
 
 client.on('connect', function() {
     console.log('Connesso a Redis');
@@ -64,6 +64,15 @@ client.on('error', (err) => {
     console.log('Error ' + err);
   });
   
+/**
+ * Checks the cache for a given request and sends the cached data if available,
+ * otherwise calls the next middleware.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @param {NextFunction} next - The next middleware function.
+ * @return {Promise<void>} A promise that resolves when the cache check is complete.
+ */
 export async function checkCache(req: Request, res: Response, next: NextFunction) {
     const { title, items } = req.query;
     const key = `post:${title || 'all'}:${items || 'all'}`;

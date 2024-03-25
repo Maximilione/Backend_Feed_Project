@@ -9,12 +9,12 @@ import YAML from 'yamljs';
 app.use(express.static('public'));
 app.use(express.json());
 
-const swaggerDocument = YAML.load('./src/swagger.yaml');
+const swaggerDocument = YAML.load('./src/swagger.yaml');// load swagger.yaml file
 
 
 app.use('/', postrouter);// use postrouter module
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));// use swaggerui module
 
 
 

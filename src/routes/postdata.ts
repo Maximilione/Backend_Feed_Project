@@ -3,7 +3,6 @@ import { checkCache } from '../client';
 import { client } from '../client';
 import { AbortError } from 'redis';
 
-
 export const postrouter = express.Router();
 export const post_url = 'https://22hbg.com/wp-json/wp/v2/posts/';
 
@@ -14,7 +13,6 @@ interface Post{
     date:string;
     content:string;
 }
-
 
 /**
  * function capable of reading data from a feed
@@ -45,16 +43,11 @@ export async function getPosts(): Promise<Post[]> {
         throw error;
     }
 }
-
+// /posts route handler
 postrouter.get('/posts', async (req: Request, res: Response) => {
     try {
-      const posts = await getPosts(); // await to get posts
-      const postout = posts.map(post => ({ 
-        date: post.date, 
-        title: post.title.rendered, 
-        content: post.content 
-    }));
-      res.json(postout);
+      const posts = await getPosts(); 
+      res.json(posts);
     } catch (error) {
       res.status(500).send('Errore durante il recupero dei post');
     }
@@ -107,7 +100,7 @@ postrouter.get('/posts-filtered', checkCache, async (req: Request, res: Response
         }  
         res.json(filteredPosts);
       }
-    } catch (error) {
+    } catch (error) {// Errore durante il recupero dei post filtrati
       console.error('Errore durante il recupero dei dati filtrati', error);
       res.status(500).send('Errore durante il recupero dei dati filtrati');
     }
