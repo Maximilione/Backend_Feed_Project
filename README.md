@@ -23,14 +23,12 @@ npm run build
 npm start
 
 ## Dipendenze
-- express: Framework per la gestione delle richieste HTTP.
-- node-fetch: Per effettuare richieste HTTP da parte del server.
-- redis: Per la connessione al database Redis.
-- swagger-jsdoc: Genera la documentazione API in formato Swagger.
-- swagger-ui-express: Fornisce una visualizzazione interattiva della documentazione API Swagger.
-
-## Licenza
-Questo progetto è concesso in licenza sotto l'**ISC License**.
+express: Framework per la gestione delle richieste HTTP.
+node-fetch: Per effettuare richieste HTTP da parte del server.
+redis: Per la connessione al database Redis.
+swagger-jsdoc: Genera la documentazione API in formato Swagger.
+swagger-ui-express: Fornisce una visualizzazione interattiva della documentazione API Swagger.
+yamljs: Per la gestione dei file YAML.
 
 ## Autore
 Massimiliano Fergnani

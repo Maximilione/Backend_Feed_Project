@@ -1,69 +1,3 @@
-/** 
-*@swagger
-*definitions:
-*  Post:
-*    type: object
-*    properties:
-*      date:
-*        type: string
-*        format: date
-*        description: Date of the post
-*        example: "2022-02-16T17:10:57"
-*      title:
-*        type: string
-*        description: Title of the post
-*        example: "Post 1"
-*      content:
-*        type: string
-*        description: Content of the post
-*        example: "Content 1"
-*/
-
-/**
- * @swagger
- * tags:
- *   name: Post
- *   description: The posts managing API
- * /post:
- *   get:
- *     summary: Get all posts
- *     tags: [Post]
- *     responses:
- *       200:
- *         description: The list of the posts
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Post'
- *       500:
- *         description: Server error
- * /filtered:
- *   get:
- *     summary: Get filtered posts
- *     tags: [Post]
- *     parameters:
- *       - in: query
- *         name: title
- *         type: string
- *         description: Title of the post
- *       - in: query
- *         name: items
- *         type: number
- *         description: Number of items
- *     responses:
- *       200:   
- *         description: The list of the filtered posts
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Post'
- *       404:
- *         description: No posts found
- *       500:
- *         description: Server error
- * 
- */
-
 import express, { Request, Response, NextFunction} from 'express';
 import { checkCache } from '../client';
 import { client } from '../client';
@@ -112,8 +46,7 @@ export async function getPosts(): Promise<Post[]> {
     }
 }
 
-
-postrouter.get('/', async (req: Request, res: Response) => {
+postrouter.get('/posts', async (req: Request, res: Response) => {
     try {
       const posts = await getPosts(); // await to get posts
       const postout = posts.map(post => ({ 
@@ -127,7 +60,7 @@ postrouter.get('/', async (req: Request, res: Response) => {
     }
 });
 
-postrouter.get('/filtered', checkCache, async (req: Request, res: Response) => {
+postrouter.get('/posts-filtered', checkCache, async (req: Request, res: Response) => {
     try {
       const { title, items } = req.query;
       const key = `post:${title || 'string'}:${items || 'string'}`;
@@ -141,6 +74,7 @@ postrouter.get('/filtered', checkCache, async (req: Request, res: Response) => {
       }
   
       if (cachedData) {
+        console.log('Data retrieved from cache');
         return res.json(JSON.parse(cachedData));
       } else {
         console.log('No data in cache');
@@ -164,8 +98,13 @@ postrouter.get('/filtered', checkCache, async (req: Request, res: Response) => {
         }
   
         // Salva i post filtrati in cache
-        await client.setEx(key, 3600, JSON.stringify(filteredPosts));
-  
+        try{
+            await client.setEx(key, 3600, JSON.stringify(filteredPosts));
+            console.log('Data saved in cache');
+        }
+        catch(error){
+            console.error('Redis error', error);
+        }  
         res.json(filteredPosts);
       }
     } catch (error) {
