@@ -1,3 +1,53 @@
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Post:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           description: The title of the post
+ *           example: "Post 1"
+ *         items:
+ *           type: number
+ *           description: The number of items in the post
+ *           example: 10
+ *       required:
+ *         - title
+ *         - items
+ *       example:
+ *         title: "Post 1"
+ *         items: 10
+ * 
+ *     PostList:
+ *       type: array
+ *       items:
+ *         $ref: '#/components/schemas/Post'
+ *       example:
+ *         - title: "Post 1"
+ *           items: 10
+ *         - title: "Post 2"
+ *           items: 5
+ *         - title: "Post 3"
+ *           items: 15
+ *         - title: "Post 4"
+ *           items: 20
+ * 
+ *     Error:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ *           description: The error message
+ *           example: "Post not found"
+ *       required:
+ *         - message
+ *       example:
+ *         message: "Post not found"
+ * 
+ */
+
 import express, { Request, Response, NextFunction} from 'express';
 import * as redis from 'redis';
 export const client = redis.createClient({
